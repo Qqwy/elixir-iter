@@ -6,6 +6,6 @@ defprotocol Iter.PersistentIterator do
   Data types that implement this protocol should also implement the `Iter.Iterator` protocol,
   as `Iter.PersistentIterator`s are a stronger variant of `Iter.Iterator`s.
   """
-  @spec to_iteratable(t) :: Iter.Iteratable.
+  @spec to_iteratable(t) :: Iter.Iteratable.t
   def to_iteratable(iterator)
 end

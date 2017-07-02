@@ -4,6 +4,6 @@ defprotocol Iter.PersistentIteratable do
   that can be turned into an `Iter.PersistentIterator`.
   """
 
-  @spec to_persistent_iterator(Iter.PersistentIteratable.t) :: Iter.PersistentIterator.t
-  def to_persistent_iterator(iteratable)
+  @spec to_iterator(Iter.PersistentIteratable.t) :: Iter.PersistentIterator.t
+  def to_iterator(iteratable)
 end

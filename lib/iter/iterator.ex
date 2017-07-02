@@ -22,6 +22,23 @@ defprotocol Iter.Iterator do
   but certain iterators might
   return different errors as well.
   """
-  @spec next(t) :: {:ok, {item, t}} | {:error, error_reason}
+  @spec next(t) :: {:ok, {item :: any, t}} | {:error, error_reason}
   def next(iterator)
+
+  @doc """
+
+  Can trivially be implemented as:
+
+  ```
+  case next(iterator) do
+    {:ok, {item, _} -> {:ok, item}
+    {:error, reason} -> {:error, reason}
+  end
+  ```
+
+  But for some datatypes, there might be an alternative implementation
+  that is faster because the iterator itself might not need to be modified.
+  """
+  @spec peek(t) :: {:ok, item :: any} | {:error, error_reason}
+  def peek(iterator)
 end
