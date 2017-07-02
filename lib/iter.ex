@@ -110,7 +110,7 @@ defmodule Iter do
   ## Examples
 
       iex> iterator = Iter.persistent_iterator(1..10)
-      iex> {:ok, {item, iterator}} = Iter.next(iterator)
+      iex> {:ok, {_item, iterator}} = Iter.next(iterator)
       iex> {:ok, {item, iterator}} = Iter.next(iterator)
       iex> item
       2
