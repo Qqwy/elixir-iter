@@ -109,14 +109,54 @@ defmodule Iter do
 
   ## Examples
 
-      iex> iterator = Iter.to_persistent_iterator([1, 2, 3, 4])
+      iex> iterator = Iter.to_persistent_iterator(1..10)
       iex> {:ok, {item, iterator}} = Iter.next(iterator)
       iex> {:ok, {item, iterator}} = Iter.next(iterator)
       iex> item
       2
       iex> Iter.from_persistent_iterator(iterator)
-      [1, 2, 3, 4]
+      (1..10)
 
   """
   defdelegate from_persistent_iterator(iterator), to: Iter.PersistentIterator, as: :to_iteratable
+
+  @doc """
+  Skips a number of elements from the beginning of the iterator.
+  """
+  def skip(iterator, 0), do: iterator
+  def skip(iterator, n_elems) when n_elems > 0 do
+    skip_next(iterator)
+    |> skip(n_elems - 1)
+  end
+
+  def take(iterator, n_elems), do: take(iterator, n_elems, into: [])
+
+  def take(iterator, 0, into: insertable), do: insertable
+  def take(iterator, n_elems, into: insertable) when n_elems > 0 do
+    case next(iterator) do
+      {:error, :empty} -> insertable
+      {:ok, {item, new_iterator}} ->
+        case Insertable.insert(insertable, item) do
+          {:ok, new_insertable} ->
+            take(new_iterator, n_elems - 1, into: new_insertable)
+          {:error, :full} -> insertable
+        end
+    end
+  end
+
+  def take_while(iterator, fun, into: insertable) do
+    case next(iterator) do
+      {:error, :empty} -> insertable
+      {:ok, {item, new_iterator}} ->
+        if fun.(item) do
+          case Insertable.insert(insertable, item) do
+            {:ok, new_insertable} ->
+              take_while(new_iterator, fun, into: new_insertable)
+            {:error, :full} -> insertable
+          end
+        else
+          insertable
+        end
+    end
+  end
 end
