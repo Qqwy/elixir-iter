@@ -1,6 +1,5 @@
-
 # Destructive Iterator
-defmodule Iter.Iterator.Implementations.Map do
+defmodule Iter.Iterator.Implementations.MapSet do
   @enforce_keys [:rest]
   defstruct rest: []
 
@@ -22,16 +21,15 @@ defmodule Iter.Iterator.Implementations.Map do
   end
 end
 
-defimpl Iter.Iteratable, for: Map do
+defimpl Iter.Iteratable, for: MapSet do
   def to_iterator(map) do
-    list = :maps.to_list(map)
-    %Iter.Iterator.Implementations.Map{rest: list}
+    list = MapSet.to_list(map)
+    %Iter.Iterator.Implementations.MapSet{rest: list}
   end
 end
 
-
 # Persistent Iterator
-defmodule Iter.PersistentIterator.Implementations.Map do
+defmodule Iter.PersistentIterator.Implementations.MapSet do
   @moduledoc """
   Based on the 'Zipper' principle.
 
@@ -62,7 +60,7 @@ defmodule Iter.PersistentIterator.Implementations.Map do
 
   defimpl Iter.PersistentIterator do
     def to_iteratable(%@for{passed: passed, rest: rest}) do
-      :maps.from_list(reverse_snoc_list(passed, rest))
+      MapSet.new(reverse_snoc_list(passed, rest))
     end
 
     defp reverse_snoc_list([], acc), do: acc
@@ -70,9 +68,9 @@ defmodule Iter.PersistentIterator.Implementations.Map do
   end
 end
 
-defimpl Iter.PersistentIteratable, for: Map do
+defimpl Iter.PersistentIteratable, for: MapSet do
   def to_iterator(map) do
-    list = :maps.to_list(map)
-    %Iter.PersistentIterator.Implementations.Map{passed: [], rest: list}
+    list = MapSet.to_list(map)
+    %Iter.PersistentIterator.Implementations.MapSet{passed: [], rest: list}
   end
 end
