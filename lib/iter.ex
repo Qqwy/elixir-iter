@@ -17,7 +17,7 @@ defmodule Iter do
 
   ## Examples
 
-      iex> Iter.to_iterator([1,2,3,4])
+      iex> Iter.to_persistent_iterator([1,2,3,4])
       %Iter.PersistentIterator.Implementations.List{passed: [], rest: [1,2,3,4]}
 
   """
@@ -94,7 +94,7 @@ defmodule Iter do
   ## Examples
       iex> iterator = Iter.to_iterator(%{a: 1, b: 2, c: 3})
       %Iter.Iterator.Implementations.Map{rest: [a: 1, b: 2, c: 3]}
-      iex> iterator |> skip_next() |> skip_next() |> peek()
+      iex> iterator |> Iter.skip_next() |> Iter.skip_next() |> Iter.peek()
       {:ok, {:c, 3}}
   """
   def skip_next(iterator) do
@@ -109,7 +109,7 @@ defmodule Iter do
 
   ## Examples
 
-      iex> iterator = Iter.to_iterator([1, 2, 3, 4])
+      iex> iterator = Iter.to_persistent_iterator([1, 2, 3, 4])
       iex> {:ok, {item, iterator}} = Iter.next(iterator)
       iex> {:ok, {item, iterator}} = Iter.next(iterator)
       iex> item
